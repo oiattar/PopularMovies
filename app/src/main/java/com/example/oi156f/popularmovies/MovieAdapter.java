@@ -27,19 +27,19 @@ class MovieAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Gets the AndroidFlavor object from the ArrayAdapter at the appropriate position
         String url = getItem(position);
 
-        // Adapters recycle views to AdapterViews.
-        // If this is a new View object we're getting, then inflate the layout.
-        // If not, this view already has the layout inflated from a previous call to getView,
-        // and we modify the View widgets as usual.
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.movie_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
 
         ImageView poster = (ImageView) convertView.findViewById(R.id.movie_image);
+        /*ImageView poster;
+        if(convertView == null) {
+            poster = new ImageView(context);
+        } else {
+            poster = (ImageView) convertView;
+        }*/
         Picasso.with(context).load(url).into(poster);
 
         return convertView;

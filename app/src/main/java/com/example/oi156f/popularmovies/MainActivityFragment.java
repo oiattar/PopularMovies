@@ -3,11 +3,16 @@ package com.example.oi156f.popularmovies;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.example.oi156f.popularmovies.utilities.MovieUtils;
 
 import java.net.URL;
@@ -17,9 +22,17 @@ public class MainActivityFragment extends Fragment {
 
     private MovieAdapter adapter;
     private GridView moviesGrid;
+    private TextView genericError;
+    private ProgressBar loadingIcon;
 
     public MainActivityFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -28,23 +41,64 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         moviesGrid = (GridView) rootView.findViewById(R.id.movies_grid);
-        new FetchMoviesTask().execute();
-
+        genericError = (TextView) rootView.findViewById(R.id.error_generic);
+        loadingIcon = (ProgressBar) rootView.findViewById(R.id.loading_icon);
+        loadMoviePosters(MovieUtils.SORT_POPULAR);
         return rootView;
     }
 
-    public class FetchMoviesTask extends AsyncTask<Void, Void, String[]> {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.sort_popular) {
+            loadMoviePosters(MovieUtils.SORT_POPULAR);
+            return true;
+        } else if(id == R.id.sort_top_rated) {
+            loadMoviePosters(MovieUtils.SORT_TOP_RATED);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void loadMoviePosters(int sorting) {
+        showMoviePostersView();
+        new FetchMoviesTask().execute(sorting);
+    }
+
+    private void showMoviePostersView() {
+        genericError.setVisibility(View.INVISIBLE);
+        moviesGrid.setVisibility(View.VISIBLE);
+    }
+
+    private void showGenericError() {
+        moviesGrid.setVisibility(View.INVISIBLE);
+        genericError.setVisibility(View.VISIBLE);
+    }
+
+    public class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
 
         @Override
-        protected String[] doInBackground(Void... params) {
-            URL movieUrl = MovieUtils.buildUrl();
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingIcon.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Movie[] doInBackground(Integer... params) {
+            int sorting = params[0];
+            URL movieUrl = MovieUtils.buildUrl(sorting);
 
             try {
                 String moviesJson = MovieUtils.getResponseFromHttpUrl(movieUrl);
-                Log.d("OMAR", moviesJson);
-                String[] posterPaths = MovieUtils.getPosterFromJson(getActivity(), moviesJson);
-                Log.d("OMAR", posterPaths.toString());
-                return posterPaths;
+                Movie[] movies = MovieUtils.getMoviesFromJson(getActivity(), moviesJson);
+                return movies;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -52,9 +106,14 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String[] posters) {
-            adapter = new MovieAdapter(getActivity(), Arrays.asList(posters));
-            moviesGrid.setAdapter(adapter);
+        protected void onPostExecute(Movie[] movies) {
+            loadingIcon.setVisibility(View.INVISIBLE);
+            if(movies != null) {
+                adapter = new MovieAdapter(getActivity(), Arrays.asList(movies));
+                moviesGrid.setAdapter(adapter);
+            } else {
+                showGenericError();
+            }
         }
     }
 }

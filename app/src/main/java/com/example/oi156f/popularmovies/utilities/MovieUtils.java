@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.oi156f.popularmovies.Movie;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,26 +26,35 @@ public final class MovieUtils {
     private static final String TAG = MovieUtils.class.getSimpleName();
 
     private static final String BASE_URL = "http://api.themoviedb.org/3";
-
     private static final String POPULAR_MOVIES = "/movie/popular";
-
     private static final String TOP_RATED_MOVIES = "/movie/top_rated";
-
     private static final String IMAGE_URL = "http://image.tmdb.org/t/p/w185";
 
-    private static final String API_KEY = "";
-
+    private static final String API_KEY = "7b1339c449a41e9cd8437a0cfec5930a";
     private static final String API_PARAM = "api_key";
 
+    public static final int SORT_POPULAR = 0;
+    public static final int SORT_TOP_RATED = 1;
+
     /**
-     * Builds the URL used to talk to the weather server using a location. This location is based
-     * on the query capabilities of the weather provider that we are using.
+     * Builds the URL used to talk to the movie database
      *
      * @param
      * @return The URL to use to query the weather server.
      */
-    public static URL buildUrl() {
-        Uri builtUri = Uri.parse(BASE_URL + POPULAR_MOVIES).buildUpon()
+    public static URL buildUrl(int sorting) {
+        String baseUrl;
+        switch(sorting) {
+            case(SORT_POPULAR):
+                baseUrl = BASE_URL + POPULAR_MOVIES;
+                break;
+            case(SORT_TOP_RATED):
+                baseUrl = BASE_URL + TOP_RATED_MOVIES;
+                break;
+            default:
+                baseUrl = BASE_URL + POPULAR_MOVIES;
+        }
+        Uri builtUri = Uri.parse(baseUrl).buildUpon()
                 .appendQueryParameter(API_PARAM, API_KEY)
                 .build();
 
@@ -64,14 +75,19 @@ public final class MovieUtils {
         return url;
     }
 
-    public static String[] getPosterFromJson(Context context, String moviesJsonStr)
+    public static Movie[] getMoviesFromJson(Context context, String moviesJsonStr)
             throws JSONException {
 
         final String RESULTS = "results";
+        final String ID = "id";
+        final String TITLE = "original_title";
         final String POSTER = "poster_path";
+        final String OVERVIEW = "overview";
+        final String RELEASE_DATE = "release_date";
+        final String RATING = "vote_average";
         final String ERROR = "cod";
 
-        String[] posterPaths = null;
+        Movie[] movies = null;
 
         JSONObject moviesJson = new JSONObject(moviesJsonStr);
 
@@ -91,17 +107,23 @@ public final class MovieUtils {
             }
         }
 
-        JSONArray moviesArray = moviesJson.getJSONArray(RESULTS);
+        JSONArray jMoviesArray = moviesJson.getJSONArray(RESULTS);
 
-        posterPaths = new String[moviesArray.length()];
+        movies = new Movie[jMoviesArray.length()];
 
-        for(int i = 0; i < moviesArray.length(); i++) {
-            JSONObject movie = moviesArray.getJSONObject(i);
-            String path = movie.getString(POSTER);
-            posterPaths[i] = buildImageUrl(path);
+        for(int i = 0; i < jMoviesArray.length(); i++) {
+            JSONObject jMovie = jMoviesArray.getJSONObject(i);
+            Movie movie = new Movie();
+            movie.setId(jMovie.getInt(ID));
+            movie.setTitle(jMovie.getString(TITLE));
+            movie.setOverview(jMovie.getString(OVERVIEW));
+            movie.setPoster(buildImageUrl(jMovie.getString(POSTER)));
+            movie.setRating(jMovie.getInt(RATING));
+            movie.setReleaseDate(jMovie.getString(RELEASE_DATE));
+            movies[i] = movie;
         }
 
-        return posterPaths;
+        return movies;
     }
 
     /**

@@ -17,30 +17,25 @@ import java.util.List;
  * Created by oi156f on 8/24/2017.
  */
 
-class MovieAdapter extends ArrayAdapter<String> {
+class MovieAdapter extends ArrayAdapter<Movie> {
     private final Context context;
 
-    public MovieAdapter(Activity context, List<String> posters) {
-        super(context, 0, posters);
+    public MovieAdapter(Activity context, List<Movie> movies) {
+        super(context, 0, movies);
         this.context = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String url = getItem(position);
+        Movie movie = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
 
-        ImageView poster = (ImageView) convertView.findViewById(R.id.movie_image);
-        /*ImageView poster;
-        if(convertView == null) {
-            poster = new ImageView(context);
-        } else {
-            poster = (ImageView) convertView;
-        }*/
-        Picasso.with(context).load(url).into(poster);
+        ImageView posterView = (ImageView) convertView.findViewById(R.id.movie_image);
+        String posterPath = movie.getPoster();
+        Picasso.with(context).load(posterPath).into(posterView);
 
         return convertView;
     }

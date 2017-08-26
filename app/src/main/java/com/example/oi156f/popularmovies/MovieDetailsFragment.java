@@ -13,19 +13,8 @@ import com.squareup.picasso.Picasso;
 
 public class MovieDetailsFragment extends Fragment {
 
-    TextView title;
-    ImageView image;
-    TextView date;
-    TextView rating;
-    TextView synopsis;
-
     public MovieDetailsFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -33,11 +22,11 @@ public class MovieDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        title = (TextView) rootView.findViewById(R.id.movie_title);
-        image = (ImageView) rootView.findViewById(R.id.movie_image);
-        date = (TextView) rootView.findViewById(R.id.movie_date);
-        rating = (TextView) rootView.findViewById(R.id.movie_rating);
-        synopsis = (TextView) rootView.findViewById(R.id.movie_synopsis);
+        TextView title = (TextView) rootView.findViewById(R.id.movie_title);
+        ImageView image = (ImageView) rootView.findViewById(R.id.movie_image);
+        TextView date = (TextView) rootView.findViewById(R.id.movie_date);
+        TextView rating = (TextView) rootView.findViewById(R.id.movie_rating);
+        TextView synopsis = (TextView) rootView.findViewById(R.id.movie_synopsis);
         Intent intent = getActivity().getIntent();
         if(intent.hasExtra(getString(R.string.intent_tag))) {
             Movie movie = intent.getParcelableExtra(getString(R.string.intent_tag));

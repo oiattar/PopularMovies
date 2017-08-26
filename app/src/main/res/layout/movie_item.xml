@@ -5,5 +5,6 @@
         android:id="@+id/movie_poster"
         android:layout_width="210dp"
         android:layout_height="300dp"
+        android:contentDescription="@string/movie_poster_desc"
         android:scaleType="fitXY" />
 </FrameLayout>

@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import java.util.Arrays;
 
 public class MovieGridFragment extends Fragment {
 
-    private MovieAdapter adapter;
     private GridView moviesGrid;
     private TextView genericError;
     private ProgressBar loadingIcon;
@@ -45,11 +42,6 @@ public class MovieGridFragment extends Fragment {
         loadingIcon = (ProgressBar) rootView.findViewById(R.id.loading_icon);
         loadMoviePosters(MovieUtils.SORT_POPULAR);
         return rootView;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -82,7 +74,7 @@ public class MovieGridFragment extends Fragment {
         genericError.setVisibility(View.VISIBLE);
     }
 
-    public class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
+    private class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
 
         @Override
         protected void onPreExecute() {
@@ -109,7 +101,7 @@ public class MovieGridFragment extends Fragment {
         protected void onPostExecute(Movie[] movies) {
             loadingIcon.setVisibility(View.INVISIBLE);
             if(movies != null) {
-                adapter = new MovieAdapter(getActivity(), Arrays.asList(movies));
+                 MovieAdapter adapter = new MovieAdapter(getActivity(), Arrays.asList(movies));
                 moviesGrid.setAdapter(adapter);
             } else {
                 showErrorMessage();

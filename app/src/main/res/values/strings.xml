@@ -5,5 +5,8 @@
     <string name="intent_tag">SelectedMovie</string>
     <string name="movie_poster_desc">Movie Poster</string>
     <string name="movie_rating">%.1f/10</string>
+    <string name="menu_sort">Sort By</string>
+    <string name="menu_sort_popular">Popular</string>
+    <string name="menu_sort_top_rated">Top Rated</string>
 
 </resources>

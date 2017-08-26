@@ -18,14 +18,14 @@ import com.example.oi156f.popularmovies.utilities.MovieUtils;
 import java.net.URL;
 import java.util.Arrays;
 
-public class MainActivityFragment extends Fragment {
+public class MovieGridFragment extends Fragment {
 
     private MovieAdapter adapter;
     private GridView moviesGrid;
     private TextView genericError;
     private ProgressBar loadingIcon;
 
-    public MainActivityFragment() {
+    public MovieGridFragment() {
         // Required empty public constructor
     }
 
@@ -38,7 +38,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_movie_grid, container, false);
 
         moviesGrid = (GridView) rootView.findViewById(R.id.movies_grid);
         genericError = (TextView) rootView.findViewById(R.id.error_generic);

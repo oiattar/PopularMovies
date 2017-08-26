@@ -8,15 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-/**
- * Created by oi156f on 8/24/2017.
- */
 
 class MovieAdapter extends ArrayAdapter<Movie> {
     private final Context context;
@@ -34,18 +29,20 @@ class MovieAdapter extends ArrayAdapter<Movie> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
 
-        ImageView posterView = (ImageView) convertView.findViewById(R.id.movie_poster);
-        String posterPath = movie.getPoster();
-        Picasso.with(context).load(posterPath).into(posterView);
+        if(movie != null) {
+            ImageView posterView = (ImageView) convertView.findViewById(R.id.movie_poster);
+            String posterPath = movie.getPoster();
+            Picasso.with(context).load(posterPath).into(posterView);
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MovieDetailsActivity.class);
-                intent.putExtra("SelectedMovie", movie);
-                context.startActivity(intent);
-            }
-        });
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, MovieDetailsActivity.class);
+                    intent.putExtra(context.getString(R.string.intent_tag), movie);
+                    context.startActivity(intent);
+                }
+            });
+        }
 
         return convertView;
     }

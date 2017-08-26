@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Popular Movies</string>
 
-    <string name="no_internet_error">Please check your Internet connection.</string>
-    <string name="generic_error">Something went wrong. Please try again.</string>
+    <string name="error_message">Something went wrong. Please try again.</string>
+    <string name="intent_tag">SelectedMovie</string>
+    <string name="movie_poster_desc">Movie Poster</string>
+    <string name="movie_rating">%.1f/10</string>
+
 </resources>

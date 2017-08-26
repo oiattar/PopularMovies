@@ -17,10 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-/**
- * Created by oi156f on 8/24/2017.
- */
-
 public final class MovieUtils {
 
     private static final String TAG = MovieUtils.class.getSimpleName();
@@ -39,7 +35,7 @@ public final class MovieUtils {
     /**
      * Builds the URL used to talk to the movie database
      *
-     * @param
+     * @param sorting specifies sorting method
      * @return The URL to use to query the weather server.
      */
     public static URL buildUrl(int sorting) {
@@ -70,9 +66,8 @@ public final class MovieUtils {
         return url;
     }
 
-    public static String buildImageUrl(String poster) {
-        String url = IMAGE_URL + poster;
-        return url;
+    private static String buildImageUrl(String poster) {
+        return IMAGE_URL + poster;
     }
 
     public static Movie[] getMoviesFromJson(Context context, String moviesJsonStr)
@@ -86,8 +81,6 @@ public final class MovieUtils {
         final String RELEASE_DATE = "release_date";
         final String RATING = "vote_average";
         final String ERROR = "cod";
-
-        Movie[] movies = null;
 
         JSONObject moviesJson = new JSONObject(moviesJsonStr);
 
@@ -109,7 +102,7 @@ public final class MovieUtils {
 
         JSONArray jMoviesArray = moviesJson.getJSONArray(RESULTS);
 
-        movies = new Movie[jMoviesArray.length()];
+        Movie[] movies = new Movie[jMoviesArray.length()];
 
         for(int i = 0; i < jMoviesArray.length(); i++) {
             JSONObject jMovie = jMoviesArray.getJSONObject(i);
@@ -118,7 +111,7 @@ public final class MovieUtils {
             movie.setTitle(jMovie.getString(TITLE));
             movie.setOverview(jMovie.getString(OVERVIEW));
             movie.setPoster(buildImageUrl(jMovie.getString(POSTER)));
-            movie.setRating(jMovie.getInt(RATING));
+            movie.setRating(jMovie.getDouble(RATING));
             movie.setReleaseDate(jMovie.getString(RELEASE_DATE));
             movies[i] = movie;
         }

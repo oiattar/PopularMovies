@@ -3,22 +3,18 @@ package com.example.oi156f.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by oi156f on 8/25/2017.
- */
-
 public class Movie implements Parcelable {
 
-    int id;
-    String title;
-    String poster;
-    String overview;
-    int rating;
-    String releaseDate;
+    private int id;
+    private String title;
+    private String poster;
+    private String overview;
+    private double rating;
+    private String releaseDate;
 
     public Movie() {}
 
-    public Movie(int id, String title, String poster, String overview, int rating, String releaseDate) {
+    public Movie(int id, String title, String poster, String overview, double rating, String releaseDate) {
         this.id = id;
         this.title = title;
         this.poster = poster;
@@ -32,7 +28,7 @@ public class Movie implements Parcelable {
         title = source.readString();
         poster = source.readString();
         overview = source.readString();
-        rating = source.readInt();
+        rating = source.readDouble();
         releaseDate = source.readString();
     }
 
@@ -68,11 +64,11 @@ public class Movie implements Parcelable {
         this.overview = overview;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -95,7 +91,7 @@ public class Movie implements Parcelable {
         dest.writeString(title);
         dest.writeString(poster);
         dest.writeString(overview);
-        dest.writeInt(rating);
+        dest.writeDouble(rating);
         dest.writeString(releaseDate);
     }
 

@@ -77,7 +77,7 @@ public class MovieGridFragment extends Fragment {
         moviesGrid.setVisibility(View.VISIBLE);
     }
 
-    private void showGenericError() {
+    private void showErrorMessage() {
         moviesGrid.setVisibility(View.INVISIBLE);
         genericError.setVisibility(View.VISIBLE);
     }
@@ -112,7 +112,7 @@ public class MovieGridFragment extends Fragment {
                 adapter = new MovieAdapter(getActivity(), Arrays.asList(movies));
                 moviesGrid.setAdapter(adapter);
             } else {
-                showGenericError();
+                showErrorMessage();
             }
         }
     }

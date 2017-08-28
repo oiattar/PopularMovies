@@ -11,7 +11,17 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class MovieDetailsFragment extends Fragment {
+    @BindView(R.id.movie_title) TextView title;
+    @BindView(R.id.movie_image) ImageView image;
+    @BindView(R.id.movie_date) TextView date;
+    @BindView(R.id.movie_rating) TextView rating;
+    @BindView(R.id.movie_synopsis) TextView synopsis;
+    private Unbinder unbinder;
 
     public MovieDetailsFragment() {
         // Required empty public constructor
@@ -22,11 +32,7 @@ public class MovieDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
-        TextView title = (TextView) rootView.findViewById(R.id.movie_title);
-        ImageView image = (ImageView) rootView.findViewById(R.id.movie_image);
-        TextView date = (TextView) rootView.findViewById(R.id.movie_date);
-        TextView rating = (TextView) rootView.findViewById(R.id.movie_rating);
-        TextView synopsis = (TextView) rootView.findViewById(R.id.movie_synopsis);
+        unbinder = ButterKnife.bind(this, rootView);
         Intent intent = getActivity().getIntent();
         if(intent.hasExtra(getString(R.string.intent_tag))) {
             Movie movie = intent.getParcelableExtra(getString(R.string.intent_tag));
@@ -37,5 +43,11 @@ public class MovieDetailsFragment extends Fragment {
             synopsis.setText(movie.getOverview());
         }
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

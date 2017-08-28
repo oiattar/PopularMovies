@@ -3,6 +3,7 @@ package com.example.oi156f.popularmovies;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +19,9 @@ import java.util.Arrays;
 
 public class MovieGridFragment extends Fragment {
 
+    private View rootView;
     private GridView moviesGrid;
     private TextView genericError;
-    private ProgressBar loadingIcon;
 
     public MovieGridFragment() {
         // Required empty public constructor
@@ -35,11 +36,10 @@ public class MovieGridFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_movie_grid, container, false);
+        rootView = inflater.inflate(R.layout.fragment_movie_grid, container, false);
 
         moviesGrid = (GridView) rootView.findViewById(R.id.movies_grid);
         genericError = (TextView) rootView.findViewById(R.id.error_generic);
-        loadingIcon = (ProgressBar) rootView.findViewById(R.id.loading_icon);
         loadMoviePosters(MovieUtils.SORT_POPULAR);
         return rootView;
     }
@@ -61,51 +61,11 @@ public class MovieGridFragment extends Fragment {
 
     private void loadMoviePosters(int sorting) {
         showMoviePostersView();
-        new FetchMoviesTask().execute(sorting);
+        new FetchMoviesTask(getActivity(), rootView).execute(sorting);
     }
 
     private void showMoviePostersView() {
         genericError.setVisibility(View.INVISIBLE);
         moviesGrid.setVisibility(View.VISIBLE);
-    }
-
-    private void showErrorMessage() {
-        moviesGrid.setVisibility(View.INVISIBLE);
-        genericError.setVisibility(View.VISIBLE);
-    }
-
-    private class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loadingIcon.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Movie[] doInBackground(Integer... params) {
-            int sorting = params[0];
-            URL movieUrl = MovieUtils.buildUrl(sorting);
-
-            try {
-                String moviesJson = MovieUtils.getResponseFromHttpUrl(movieUrl);
-                Movie[] movies = MovieUtils.getMoviesFromJson(getActivity(), moviesJson);
-                return movies;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Movie[] movies) {
-            loadingIcon.setVisibility(View.INVISIBLE);
-            if(movies != null) {
-                 MovieAdapter adapter = new MovieAdapter(getActivity(), Arrays.asList(movies));
-                moviesGrid.setAdapter(adapter);
-            } else {
-                showErrorMessage();
-            }
-        }
     }
 }

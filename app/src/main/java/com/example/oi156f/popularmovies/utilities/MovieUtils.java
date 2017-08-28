@@ -26,7 +26,7 @@ public final class MovieUtils {
     private static final String TOP_RATED_MOVIES = "/movie/top_rated";
     private static final String IMAGE_URL = "http://image.tmdb.org/t/p/w185";
 
-    private static final String API_KEY = "";
+    private static final String API_KEY = "7b1339c449a41e9cd8437a0cfec5930a";
     private static final String API_PARAM = "api_key";
 
     public static final int SORT_POPULAR = 0;

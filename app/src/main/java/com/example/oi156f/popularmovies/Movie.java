@@ -10,18 +10,12 @@ public class Movie implements Parcelable {
     private String poster;
     private String overview;
     private double rating;
+    private int runtime;
     private String releaseDate;
+    private Trailer[] trailers;
+    private Review[] reviews;
 
     public Movie() {}
-
-    public Movie(int id, String title, String poster, String overview, double rating, String releaseDate) {
-        this.id = id;
-        this.title = title;
-        this.poster = poster;
-        this.overview = overview;
-        this.rating = rating;
-        this.releaseDate = releaseDate;
-    }
 
     private Movie(Parcel source) {
         id = source.readInt();
@@ -29,6 +23,7 @@ public class Movie implements Parcelable {
         poster = source.readString();
         overview = source.readString();
         rating = source.readDouble();
+        runtime = source.readInt();
         releaseDate = source.readString();
     }
 
@@ -72,12 +67,36 @@ public class Movie implements Parcelable {
         this.rating = rating;
     }
 
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
     public String getReleaseDate() {
         return releaseDate;
     }
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Trailer[] getTrailers() {
+        return trailers;
+    }
+
+    public void setTrailers(Trailer[] trailers) {
+        this.trailers = trailers;
+    }
+
+    public Review[] getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Review[] reviews) {
+        this.reviews = reviews;
     }
 
     @Override
@@ -92,6 +111,7 @@ public class Movie implements Parcelable {
         dest.writeString(poster);
         dest.writeString(overview);
         dest.writeDouble(rating);
+        dest.writeInt(runtime);
         dest.writeString(releaseDate);
     }
 
@@ -106,4 +126,50 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public class Trailer {
+        private String name;
+        private String path;
+
+        public Trailer() {}
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+    }
+
+    public class Review {
+        private String author;
+        private String content;
+
+        public Review() {}
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
 }

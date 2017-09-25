@@ -2,8 +2,6 @@ package com.example.oi156f.popularmovies;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -47,7 +45,7 @@ public class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
 
         try {
             String moviesJson = MovieUtils.getResponseFromHttpUrl(movieUrl);
-            Movie[] movies = MovieUtils.getMoviesFromJson(mActivity, moviesJson);
+            Movie[] movies = MovieUtils.getMoviesFromJson( moviesJson);
             return movies;
         } catch (Exception e) {
             e.printStackTrace();

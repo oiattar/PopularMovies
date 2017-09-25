@@ -3,6 +3,8 @@ package com.example.oi156f.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ public class MovieDetailsFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         if(intent.hasExtra(getString(R.string.intent_tag))) {
             Movie movie = intent.getParcelableExtra(getString(R.string.intent_tag));
+            new FetchDetailsTask(getActivity(), rootView).execute(movie);
             title.setText(movie.getTitle());
             Picasso.with(getActivity()).load(movie.getPoster()).into(image);
             date.setText(movie.getReleaseDate().substring(0, 4));

@@ -1,10 +1,10 @@
 package com.example.oi156f.popularmovies.utilities;
 
-import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.oi156f.popularmovies.Movie;
+import com.example.oi156f.popularmovies.Movie.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,16 +21,23 @@ public final class MovieUtils {
 
     private static final String TAG = MovieUtils.class.getSimpleName();
 
-    private static final String BASE_URL = "http://api.themoviedb.org/3";
-    private static final String POPULAR_MOVIES = "/movie/popular";
-    private static final String TOP_RATED_MOVIES = "/movie/top_rated";
+    private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+    private static final String POPULAR_MOVIES = "popular";
+    private static final String TOP_RATED_MOVIES = "top_rated";
+    private static final String TRAILERS_URL = "/videos";
+    private static final String REVIEWS_URL = "/reviews";
     private static final String IMAGE_URL = "http://image.tmdb.org/t/p/w185";
 
-    private static final String API_KEY = "";
+    private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
+
+    private static final String API_KEY = "7b1339c449a41e9cd8437a0cfec5930a";
     private static final String API_PARAM = "api_key";
 
     public static final int SORT_POPULAR = 0;
     public static final int SORT_TOP_RATED = 1;
+    public static final int TRAILERS = 2;
+    public static final int REVIEWS = 3;
+    public static final int ALL = 4;
 
     /**
      * Builds the URL used to talk to the movie database
@@ -61,7 +68,32 @@ public final class MovieUtils {
             e.printStackTrace();
         }
 
-        Log.v(TAG, "Built URI " + url);
+        return url;
+    }
+
+    public static URL buildDetailsUrl(int id, int type) {
+        String baseUrl;
+        switch(type) {
+            case(TRAILERS):
+                baseUrl = BASE_URL + Integer.toString(id) + TRAILERS_URL;
+                break;
+            case(REVIEWS):
+                baseUrl = BASE_URL + Integer.toString(id) + REVIEWS_URL;
+                break;
+            default:
+                baseUrl = BASE_URL + Integer.toString(id);
+        }
+
+        Uri builtUri = Uri.parse(baseUrl).buildUpon()
+                .appendQueryParameter(API_PARAM, API_KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         return url;
     }
@@ -70,7 +102,7 @@ public final class MovieUtils {
         return IMAGE_URL + poster;
     }
 
-    public static Movie[] getMoviesFromJson(Context context, String moviesJsonStr)
+    public static Movie[] getMoviesFromJson(String moviesJsonStr)
             throws JSONException {
 
         final String RESULTS = "results";
@@ -117,6 +149,124 @@ public final class MovieUtils {
         }
 
         return movies;
+    }
+
+    public static Trailer[] getTrailersFromJson(String trailersJsonStr)
+            throws JSONException {
+
+        final String RESULTS = "results";
+        final String NAME = "name";
+        final String SITE = "site";
+        final String KEY = "key";
+        final String ERROR = "cod";
+
+        JSONObject trailersJson = new JSONObject(trailersJsonStr);
+
+        /* Is there an error? */
+        if (trailersJson.has(ERROR)) {
+            int errorCode = trailersJson.getInt(ERROR);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* Location invalid */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+
+        JSONArray jTrailersArray = trailersJson.getJSONArray(RESULTS);
+
+        Trailer[] trailers = new Trailer[jTrailersArray.length()];
+
+        for(int i = 0; i < jTrailersArray.length(); i++) {
+            JSONObject jTrailer = jTrailersArray.getJSONObject(i);
+            String site = jTrailer.getString(SITE);
+            String name = jTrailer.getString(NAME);
+            String key = jTrailer.getString(KEY);
+
+            if(site.equals("YouTube")) {
+                Trailer trailer = new Movie().new Trailer();
+                trailer.setName(name);
+                trailer.setPath(BASE_YOUTUBE_URL + key);
+                trailers[i] = trailer;
+            }
+        }
+
+        return trailers;
+    }
+
+    public static Review[] getReviewsFromJson(String reviewsJsonStr)
+            throws JSONException {
+
+        final String RESULTS = "results";
+        final String AUTHOR = "author";
+        final String CONTENT = "content";
+        final String ERROR = "cod";
+
+        JSONObject reviewsJson = new JSONObject(reviewsJsonStr);
+
+        /* Is there an error? */
+        if (reviewsJson.has(ERROR)) {
+            int errorCode = reviewsJson.getInt(ERROR);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* Location invalid */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+
+        JSONArray jReviewsArray = reviewsJson.getJSONArray(RESULTS);
+
+        Review[] reviews = new Review[jReviewsArray.length()];
+
+        for(int i = 0; i < jReviewsArray.length(); i++) {
+            JSONObject jReview = jReviewsArray.getJSONObject(i);
+            Review review = new Movie().new Review();
+            review.setAuthor(jReview.getString(AUTHOR));
+            review.setContent(jReview.getString(CONTENT));
+            reviews[i] = review;
+        }
+
+        return reviews;
+    }
+
+    public static int getRuntimeFromJson(String detailsJsonStr)
+        throws JSONException {
+
+        final String RUNTIME = "runtime";
+        final String ERROR = "cod";
+
+        JSONObject detailsJson = new JSONObject(detailsJsonStr);
+
+        /* Is there an error? */
+        if (detailsJson.has(ERROR)) {
+            int errorCode = detailsJson.getInt(ERROR);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* Location invalid */
+                    return -1;
+                default:
+                    /* Server probably down */
+                    return -1;
+            }
+        }
+
+        int runtime = detailsJson.getInt(RUNTIME);
+
+        return runtime;
     }
 
     /**

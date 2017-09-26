@@ -14,6 +14,7 @@ public class Movie implements Parcelable {
     private String releaseDate;
     private Trailer[] trailers;
     private Review[] reviews;
+    private boolean isFavorite = false;
 
     public Movie() {}
 
@@ -35,7 +36,7 @@ public class Movie implements Parcelable {
         this.id = id;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
@@ -51,7 +52,7 @@ public class Movie implements Parcelable {
         this.poster = poster;
     }
 
-    public String getOverview() {
+    String getOverview() {
         return overview;
     }
 
@@ -59,7 +60,7 @@ public class Movie implements Parcelable {
         this.overview = overview;
     }
 
-    public double getRating() {
+    double getRating() {
         return rating;
     }
 
@@ -67,15 +68,15 @@ public class Movie implements Parcelable {
         this.rating = rating;
     }
 
-    public int getRuntime() {
+    int getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(int runtime) {
+    void setRuntime(int runtime) {
         this.runtime = runtime;
     }
 
-    public String getReleaseDate() {
+    String getReleaseDate() {
         return releaseDate;
     }
 
@@ -83,20 +84,28 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    public Trailer[] getTrailers() {
+    Trailer[] getTrailers() {
         return trailers;
     }
 
-    public void setTrailers(Trailer[] trailers) {
+    void setTrailers(Trailer[] trailers) {
         this.trailers = trailers;
     }
 
-    public Review[] getReviews() {
+    Review[] getReviews() {
         return reviews;
     }
 
-    public void setReviews(Review[] reviews) {
+    void setReviews(Review[] reviews) {
         this.reviews = reviews;
+    }
+
+    boolean isFavorite() {
+        return isFavorite;
+    }
+
+    void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     @Override

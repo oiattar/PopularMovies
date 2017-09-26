@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- TODO: loading icon -->
-    
     <ImageView
         android:id="@+id/trailer_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="10dp"
         android:src="@drawable/video_icon"
+        android:contentDescription="@string/trailer_image_desc"
         android:layout_gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"

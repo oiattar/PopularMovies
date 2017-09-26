@@ -7,6 +7,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.oi156f.popularmovies.adapters.MovieAdapter;
 import com.example.oi156f.popularmovies.utilities.MovieUtils;
 
 import java.net.URL;
@@ -14,9 +15,10 @@ import java.util.Arrays;
 
 /**
  * Created by oi156f on 8/28/2017.
+ * AsyncTask to fetch movies for main movie grid
  */
 
-public class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
+class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
 
     private Activity mActivity;
     private View rootView;
@@ -24,7 +26,7 @@ public class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
     private ProgressBar loadingIcon;
     private TextView genericError;
 
-    public FetchMoviesTask(Activity activity, View view) {
+    FetchMoviesTask(Activity activity, View view) {
         mActivity = activity;
         rootView = view;
         moviesGrid = (GridView) rootView.findViewById(R.id.movies_grid);
@@ -45,8 +47,7 @@ public class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
 
         try {
             String moviesJson = MovieUtils.getResponseFromHttpUrl(movieUrl);
-            Movie[] movies = MovieUtils.getMoviesFromJson( moviesJson);
-            return movies;
+            return MovieUtils.getMoviesFromJson(moviesJson);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

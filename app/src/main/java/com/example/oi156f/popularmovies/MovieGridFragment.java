@@ -48,15 +48,20 @@ public class MovieGridFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.sort_popular) {
-            loadMoviePosters(MovieUtils.SORT_POPULAR);
-            return true;
-        } else if(id == R.id.sort_top_rated) {
-            loadMoviePosters(MovieUtils.SORT_TOP_RATED);
-            return true;
-        }
+        switch (id) {
+            case R.id.sort_popular:
+                loadMoviePosters(MovieUtils.SORT_POPULAR);
+                return true;
+            case R.id.sort_top_rated:
+                loadMoviePosters(MovieUtils.SORT_TOP_RATED);
+                return true;
+            case R.id.sort_favorites:
+                loadMoviePosters(MovieUtils.SORT_FAVORITES);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
+        }
     }
 
     private void loadMoviePosters(int sorting) {

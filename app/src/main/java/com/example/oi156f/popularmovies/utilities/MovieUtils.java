@@ -30,14 +30,15 @@ public final class MovieUtils {
 
     private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
-    private static final String API_KEY = "7b1339c449a41e9cd8437a0cfec5930a";
+    private static final String API_KEY = "";
     private static final String API_PARAM = "api_key";
 
     public static final int SORT_POPULAR = 0;
     public static final int SORT_TOP_RATED = 1;
-    public static final int TRAILERS = 2;
-    public static final int REVIEWS = 3;
-    public static final int ALL = 4;
+    public static final int SORT_FAVORITES = 2;
+    public static final int TRAILERS = 3;
+    public static final int REVIEWS = 4;
+    public static final int ALL = 5;
 
     /**
      * Builds the URL used to talk to the movie database
@@ -157,8 +158,12 @@ public final class MovieUtils {
         final String RESULTS = "results";
         final String NAME = "name";
         final String SITE = "site";
+        final String TYPE = "type";
         final String KEY = "key";
         final String ERROR = "cod";
+
+        final String YOUTUBE = "YouTube";
+        final String TRAILER = "Trailer";
 
         JSONObject trailersJson = new JSONObject(trailersJsonStr);
 
@@ -180,19 +185,32 @@ public final class MovieUtils {
 
         JSONArray jTrailersArray = trailersJson.getJSONArray(RESULTS);
 
-        Trailer[] trailers = new Trailer[jTrailersArray.length()];
+        Trailer[] temp = new Trailer[jTrailersArray.length()];
+        int trailerCount = 0;
 
         for(int i = 0; i < jTrailersArray.length(); i++) {
             JSONObject jTrailer = jTrailersArray.getJSONObject(i);
             String site = jTrailer.getString(SITE);
             String name = jTrailer.getString(NAME);
+            String type = jTrailer.getString(TYPE);
             String key = jTrailer.getString(KEY);
 
-            if(site.equals("YouTube")) {
+            if(site.equals(YOUTUBE) && type.equals(TRAILER)) {
                 Trailer trailer = new Movie().new Trailer();
                 trailer.setName(name);
                 trailer.setPath(BASE_YOUTUBE_URL + key);
-                trailers[i] = trailer;
+                temp[i] = trailer;
+                trailerCount++;
+            } else
+                temp[i] = null;
+        }
+
+        Trailer[] trailers = new Trailer[trailerCount];
+        int pos = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i] != null) {
+                trailers[pos] = temp[i];
+                pos++;
             }
         }
 
@@ -264,9 +282,7 @@ public final class MovieUtils {
             }
         }
 
-        int runtime = detailsJson.getInt(RUNTIME);
-
-        return runtime;
+        return detailsJson.getInt(RUNTIME);
     }
 
     /**

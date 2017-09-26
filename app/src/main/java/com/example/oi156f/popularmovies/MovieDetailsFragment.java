@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ToggleButton;
 
 import com.example.oi156f.popularmovies.data.FavoritesContract.*;
 
+import com.example.oi156f.popularmovies.utilities.MovieUtils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -34,6 +36,8 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
 
     private Unbinder unbinder;
 
+    private boolean isFavorite;
+
     public MovieDetailsFragment() {
         // Required empty public constructor
     }
@@ -46,6 +50,9 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
         unbinder = ButterKnife.bind(this, rootView);
         favoriteButton.setOnClickListener(this);
         Intent intent = getActivity().getIntent();
+        if (savedInstanceState != null) {
+            isFavorite = savedInstanceState.getBoolean(MovieUtils.FAVORITES_KEY);
+        }
         if(intent.hasExtra(getString(R.string.intent_tag))) {
             movie = intent.getParcelableExtra(getString(R.string.intent_tag));
             new FetchDetailsTask(getActivity(), rootView).execute(movie);
@@ -54,9 +61,15 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
             date.setText(movie.getReleaseDate().substring(0, 4));
             rating.setText(getString(R.string.movie_rating, movie.getRating()));
             synopsis.setText(movie.getOverview());
-            favoriteButton.setChecked(movie.isFavorite());
+            favoriteButton.setChecked(isFavorite);
         }
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(MovieUtils.FAVORITES_KEY, isFavorite);
     }
 
     public void addFavorite() {
@@ -101,11 +114,11 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         if (favoriteButton.isChecked()) {
             addFavorite();
-            movie.setFavorite(true);
+            isFavorite = true;
         }
         else if (!(favoriteButton.isChecked())) {
             deleteFavorite();
-            movie.setFavorite(false);
+            isFavorite = false;
         }
     }
 }

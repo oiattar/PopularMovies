@@ -1,6 +1,8 @@
 package com.example.oi156f.popularmovies.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +42,11 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         holder.name.setText(trailer.getName());
         if (position == getItemCount() - 1)
             holder.divider.setVisibility(View.GONE);
+    }
 
+    private void openYouTubeIntent(String path) {
+        Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+        mContext.startActivity(youTubeIntent);
     }
 
     @Override
@@ -48,7 +54,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         return mTrailers.length;
     }
 
-    class TrailerViewHolder extends RecyclerView.ViewHolder {
+    class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView name;
         View divider;
@@ -58,6 +64,13 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
             name = (TextView) view.findViewById(R.id.trailer_name);
             divider = view.findViewById(R.id.trailer_divider);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Trailer trailer = mTrailers[getAdapterPosition()];
+            openYouTubeIntent(trailer.getPath());
         }
     }
 }

@@ -40,6 +40,8 @@ public final class MovieUtils {
     public static final int REVIEWS = 4;
     public static final int ALL = 5;
 
+    public static final String FAVORITES_KEY = "favorites";
+
     /**
      * Builds the URL used to talk to the movie database
      *

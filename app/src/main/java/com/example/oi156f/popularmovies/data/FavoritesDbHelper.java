@@ -12,7 +12,7 @@ class FavoritesDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "favorites.db";
 
     // If you change the database schema, you must increment the database version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Constructor
     FavoritesDbHelper(Context context) {
@@ -29,7 +29,7 @@ class FavoritesDbHelper extends SQLiteOpenHelper {
                 FavoritesEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
                 FavoritesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
                 FavoritesEntry.COLUMN_RUNTIME + " INTEGER NOT NULL, " +
-                FavoritesEntry.COLUMN_RATING + " INTEGER NOT NULL, " +
+                FavoritesEntry.COLUMN_RATING + " REAL NOT NULL, " +
                 FavoritesEntry.COLUMN_SYNOPSIS + " TEXT NOT NULL " +
                 "); ";
 

@@ -14,7 +14,6 @@ public class Movie implements Parcelable {
     private String releaseDate;
     private Trailer[] trailers;
     private Review[] reviews;
-    private boolean isFavorite = false;
 
     public Movie() {}
 
@@ -98,14 +97,6 @@ public class Movie implements Parcelable {
 
     void setReviews(Review[] reviews) {
         this.reviews = reviews;
-    }
-
-    boolean isFavorite() {
-        return isFavorite;
-    }
-
-    void setFavorite(boolean favorite) {
-        isFavorite = favorite;
     }
 
     @Override

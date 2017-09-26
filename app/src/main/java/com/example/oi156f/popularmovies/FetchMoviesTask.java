@@ -44,6 +44,8 @@ class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
     protected Movie[] doInBackground(Integer... params) {
         int sorting = params[0];
         URL movieUrl = MovieUtils.buildUrl(sorting);
+        //TODO: if favorite, query to get cursor
+        //TODO: convert cursor to Movie[], use MovieUtil
 
         try {
             String moviesJson = MovieUtils.getResponseFromHttpUrl(movieUrl);

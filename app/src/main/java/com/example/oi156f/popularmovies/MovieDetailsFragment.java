@@ -6,12 +6,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +30,7 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
     @BindView(R.id.movie_date) TextView date;
     @BindView(R.id.movie_rating) TextView rating;
     @BindView(R.id.movie_synopsis) TextView synopsis;
-    @BindView(R.id.favorite_button) ImageButton favoriteButton;
+    @BindView(R.id.favorite_button) FloatingActionButton favoriteButton;
     @BindView(R.id.details_layout) ConstraintLayout detailsLayout;
 
     private Movie movie = null;

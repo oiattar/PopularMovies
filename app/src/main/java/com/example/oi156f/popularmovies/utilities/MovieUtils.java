@@ -114,6 +114,7 @@ public final class MovieUtils {
         final String ID = "id";
         final String TITLE = "original_title";
         final String POSTER = "poster_path";
+        final String BACKDROP = "backdrop_path";
         final String OVERVIEW = "overview";
         final String RELEASE_DATE = "release_date";
         final String RATING = "vote_average";
@@ -148,6 +149,7 @@ public final class MovieUtils {
             movie.setTitle(jMovie.getString(TITLE));
             movie.setOverview(jMovie.getString(OVERVIEW));
             movie.setPoster(buildImageUrl(jMovie.getString(POSTER)));
+            movie.setBackdrop(buildImageUrl(jMovie.getString(BACKDROP)));
             movie.setRating(jMovie.getDouble(RATING));
             movie.setReleaseDate(jMovie.getString(RELEASE_DATE));
             movies[i] = movie;
@@ -269,13 +271,13 @@ public final class MovieUtils {
             String title = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_TITLE));
             int id = cursor.getInt(cursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_ID));
             String poster = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_POSTER_PATH));
+            String backdrop = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_BACKDROP_PATH));
             String synopsis = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_SYNOPSIS));
             double rating = cursor.getDouble(cursor.getColumnIndex(FavoritesEntry.COLUMN_RATING));
             int runtime = cursor.getInt(cursor.getColumnIndex(FavoritesEntry.COLUMN_RUNTIME));
             String releaseDate = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_RELEASE_DATE));
 
-            Movie movie = new Movie(id, title, poster, synopsis, rating, runtime, releaseDate);
-            Log.v("OMAR: ", "movie: " + title);
+            Movie movie = new Movie(id, title, poster, backdrop, synopsis, rating, runtime, releaseDate)
 
             favoriteMovies.add(movie);
         }

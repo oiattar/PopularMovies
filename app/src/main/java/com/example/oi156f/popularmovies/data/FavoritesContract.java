@@ -26,11 +26,10 @@ public class FavoritesContract {
         public static final String COLUMN_MOVIE_TITLE = "movieTitle";
         public static final String COLUMN_MOVIE_ID = "movieId";
         public static final String COLUMN_POSTER_PATH = "posterPath";
+        public static final String COLUMN_BACKDROP_PATH = "backdropPath";
         public static final String COLUMN_RELEASE_DATE = "releaseDate";
         public static final String COLUMN_RUNTIME = "runtime";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_SYNOPSIS = "synopsis";
-        //public static final String COLUMN_TRAILERS = "trailers";
-        //public static final String COLUMN_REVIEWS = "reviews";
     }
 }

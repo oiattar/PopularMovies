@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.oi156f.popularmovies.data.FavoritesContract.*;
 
 import com.example.oi156f.popularmovies.utilities.MovieUtils;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -27,6 +28,7 @@ import butterknife.Unbinder;
 public class MovieDetailsFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.movie_title) TextView title;
     @BindView(R.id.movie_image) ImageView image;
+    @BindView(R.id.movie_backdrop) ImageView backdrop;
     @BindView(R.id.movie_date) TextView date;
     @BindView(R.id.movie_rating) TextView rating;
     @BindView(R.id.movie_synopsis) TextView synopsis;
@@ -60,6 +62,17 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
             new FetchDetailsTask(getActivity(), rootView).execute(movie);
             title.setText(movie.getTitle());
             Picasso.with(getActivity()).load(movie.getPoster()).into(image);
+            Picasso.with(getActivity()).load(movie.getBackdrop()).into(backdrop, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            title.setBackground(backdrop.getDrawable());
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
             date.setText(movie.getReleaseDate().substring(0, 4));
             rating.setText(getString(R.string.movie_rating, movie.getRating()));
             synopsis.setText(movie.getOverview());

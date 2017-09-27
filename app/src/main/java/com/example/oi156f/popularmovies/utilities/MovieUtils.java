@@ -28,7 +28,9 @@ public final class MovieUtils {
     private static final String TOP_RATED_MOVIES = "top_rated";
     private static final String TRAILERS_URL = "/videos";
     private static final String REVIEWS_URL = "/reviews";
-    private static final String IMAGE_URL = "http://image.tmdb.org/t/p/w185";
+    private static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
+    private static final String POSTER_SIZE = "w185";
+    private static final String BACKDROP_SIZE = "w500";
 
     private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
@@ -103,8 +105,8 @@ public final class MovieUtils {
         return url;
     }
 
-    private static String buildImageUrl(String poster) {
-        return IMAGE_URL + poster;
+    private static String buildImageUrl(String path, String size) {
+        return IMAGE_URL + size + path;
     }
 
     public static Movie[] getMoviesFromJson(String moviesJsonStr)
@@ -148,8 +150,8 @@ public final class MovieUtils {
             movie.setId(jMovie.getInt(ID));
             movie.setTitle(jMovie.getString(TITLE));
             movie.setOverview(jMovie.getString(OVERVIEW));
-            movie.setPoster(buildImageUrl(jMovie.getString(POSTER)));
-            movie.setBackdrop(buildImageUrl(jMovie.getString(BACKDROP)));
+            movie.setPoster(buildImageUrl(jMovie.getString(POSTER), POSTER_SIZE));
+            movie.setBackdrop(buildImageUrl(jMovie.getString(BACKDROP), BACKDROP_SIZE));
             movie.setRating(jMovie.getDouble(RATING));
             movie.setReleaseDate(jMovie.getString(RELEASE_DATE));
             movies[i] = movie;

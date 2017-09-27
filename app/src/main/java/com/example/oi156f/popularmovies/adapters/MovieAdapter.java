@@ -15,14 +15,17 @@ import com.example.oi156f.popularmovies.MovieDetailsActivity;
 import com.example.oi156f.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieAdapter extends ArrayAdapter<Movie> {
     private final Context context;
+    private List<Movie> movies;
 
     public MovieAdapter(Activity context, List<Movie> movies) {
         super(context, 0, movies);
         this.context = context;
+        this.movies = movies;
     }
 
     @NonNull
@@ -37,7 +40,10 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         if(movie != null) {
             ImageView posterView = (ImageView) convertView.findViewById(R.id.movie_poster);
             String posterPath = movie.getPoster();
-            Picasso.with(context).load(posterPath).into(posterView);
+            Picasso.with(context)
+                    .load(posterPath)
+                    .error(R.drawable.image_error)
+                    .into(posterView);
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -50,5 +56,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         }
 
         return convertView;
+    }
+
+    public ArrayList<Movie> getItems() {
+        return new ArrayList<>(movies);
     }
 }

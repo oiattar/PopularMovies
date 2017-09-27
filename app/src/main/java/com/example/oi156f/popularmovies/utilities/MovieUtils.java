@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.oi156f.popularmovies.BuildConfig;
 import com.example.oi156f.popularmovies.Movie;
 import com.example.oi156f.popularmovies.Movie.*;
 import com.example.oi156f.popularmovies.data.FavoritesContract.*;
@@ -31,7 +32,7 @@ public final class MovieUtils {
 
     private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
-    private static final String API_KEY = "";
+    private static final String API_KEY = BuildConfig.TMDB_API_KEY;
     private static final String API_PARAM = "api_key";
 
     public static final int SORT_POPULAR = 0;

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.oi156f.popularmovies.data.FavoritesContract.*;
 
@@ -30,6 +31,7 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
     @BindView(R.id.movie_rating) TextView rating;
     @BindView(R.id.movie_synopsis) TextView synopsis;
     @BindView(R.id.favorite_button) ImageButton favoriteButton;
+    @BindView(R.id.details_layout) ConstraintLayout detailsLayout;
 
     private Movie movie = null;
 
@@ -90,7 +92,7 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
 
         if(uri != null) {
             String message = "\'" + movie.getTitle() + "\' added to Favorites";
-            Toast.makeText(getActivity().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+            Snackbar.make(detailsLayout, message, Snackbar.LENGTH_SHORT).show();
             setFavIcon(true);
         }
     }
@@ -102,7 +104,7 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
 
         if (numDeleted != 0) {
             String message = "\'" + movie.getTitle() + "\' removed from Favorites";
-            Toast.makeText(getActivity().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+            Snackbar.make(detailsLayout, message, Snackbar.LENGTH_SHORT).show();
             setFavIcon(false);
         }
     }

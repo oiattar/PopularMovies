@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.oi156f.popularmovies.adapters.MovieAdapter;
 import com.example.oi156f.popularmovies.utilities.MovieUtils;
+
+import java.util.ArrayList;
 
 public class MovieGridFragment extends Fragment {
 
@@ -18,6 +21,7 @@ public class MovieGridFragment extends Fragment {
     private TextView genericError;
     private TextView noFavError;
     private int currentSorting;
+    private MovieAdapter movieAdapter;
 
     public MovieGridFragment() {
         // Required empty public constructor
@@ -37,7 +41,13 @@ public class MovieGridFragment extends Fragment {
         moviesGrid = (GridView) rootView.findViewById(R.id.movies_grid);
         genericError = (TextView) rootView.findViewById(R.id.error_generic);
         noFavError = (TextView) rootView.findViewById(R.id.error_no_favorites);
-        loadMoviePosters(MovieUtils.SORT_POPULAR);
+        if (savedInstanceState != null) {
+            ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList("movieAdapter");
+            movieAdapter = new MovieAdapter(getActivity(), movies);
+            moviesGrid.setAdapter(movieAdapter);
+        } else {
+            loadMoviePosters(MovieUtils.SORT_POPULAR);
+        }
         return rootView;
     }
 
@@ -46,6 +56,13 @@ public class MovieGridFragment extends Fragment {
         super.onResume();
         if (currentSorting == MovieUtils.SORT_FAVORITES)
             loadMoviePosters(MovieUtils.SORT_FAVORITES);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        movieAdapter = (MovieAdapter) moviesGrid.getAdapter();
+        outState.putParcelableArrayList("movieAdapter", movieAdapter.getItems());
     }
 
     @Override

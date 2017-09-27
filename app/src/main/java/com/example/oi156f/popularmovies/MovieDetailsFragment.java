@@ -96,6 +96,7 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_ID, movie.getId());
         contentValues.put(FavoritesEntry.COLUMN_POSTER_PATH, movie.getPoster());
+        contentValues.put(FavoritesEntry.COLUMN_BACKDROP_PATH, movie.getBackdrop());
         contentValues.put(FavoritesEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         contentValues.put(FavoritesEntry.COLUMN_RUNTIME, movie.getRuntime());
         contentValues.put(FavoritesEntry.COLUMN_RATING, movie.getRating());

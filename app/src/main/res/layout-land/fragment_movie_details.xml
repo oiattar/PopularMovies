@@ -13,7 +13,7 @@
             android:id="@+id/movie_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:minHeight="140dp"
+            android:minHeight="200dp"
             android:background="#008080"
             android:textSize="50sp"
             android:textColor="#ffffff"
@@ -98,8 +98,10 @@
             app:layout_constraintLeft_toRightOf="@+id/movie_date"
             app:layout_constraintRight_toLeftOf="@+id/favorite_button"
             android:layout_marginLeft="34dp"
+            android:layout_marginStart="34dp"
             app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <View
             android:id="@+id/divider1"
@@ -230,6 +232,12 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reviews_label"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/movie_backdrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
     </android.support.constraint.ConstraintLayout>
 

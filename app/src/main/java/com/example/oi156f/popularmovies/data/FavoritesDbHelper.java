@@ -12,7 +12,7 @@ class FavoritesDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "favorites.db";
 
     // If you change the database schema, you must increment the database version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // Constructor
     FavoritesDbHelper(Context context) {

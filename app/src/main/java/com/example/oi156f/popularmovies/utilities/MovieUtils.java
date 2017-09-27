@@ -2,7 +2,6 @@ package com.example.oi156f.popularmovies.utilities;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.oi156f.popularmovies.BuildConfig;
 import com.example.oi156f.popularmovies.Movie;

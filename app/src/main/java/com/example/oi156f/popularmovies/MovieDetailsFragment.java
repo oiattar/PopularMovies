@@ -6,9 +6,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +30,16 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MovieDetailsFragment extends Fragment implements View.OnClickListener {
-    @BindView(R.id.movie_title) TextView title;
+    //@BindView(R.id.movie_title) TextView title;
     @BindView(R.id.movie_image) ImageView image;
+    @BindView(R.id.movie_backdrop) ImageView backdrop;
     @BindView(R.id.movie_date) TextView date;
     @BindView(R.id.movie_rating) TextView rating;
     @BindView(R.id.movie_synopsis) TextView synopsis;
     @BindView(R.id.favorite_button) FloatingActionButton favoriteButton;
     @BindView(R.id.details_layout) ConstraintLayout detailsLayout;
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     private Movie movie = null;
 
@@ -58,8 +66,17 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
             movie = intent.getParcelableExtra(getString(R.string.intent_tag));
             isFavorite = checkIfFavorite(movie);
             new FetchDetailsTask(getActivity(), rootView).execute(movie);
-            title.setText(movie.getTitle());
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            collapsingToolbarLayout.setTitle(movie.getTitle());
+            collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
+            collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
+            collapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+            collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+            //title.setText(movie.getTitle());
             Picasso.with(getActivity()).load(movie.getPoster()).into(image);
+            Picasso.with(getActivity()).load(movie.getBackdrop()).into(backdrop);
             date.setText(movie.getReleaseDate().substring(0, 4));
             rating.setText(getString(R.string.movie_rating, movie.getRating()));
             synopsis.setText(movie.getOverview());

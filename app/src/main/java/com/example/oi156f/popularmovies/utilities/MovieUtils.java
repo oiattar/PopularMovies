@@ -277,7 +277,7 @@ public final class MovieUtils {
             int runtime = cursor.getInt(cursor.getColumnIndex(FavoritesEntry.COLUMN_RUNTIME));
             String releaseDate = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_RELEASE_DATE));
 
-            Movie movie = new Movie(id, title, poster, backdrop, synopsis, rating, runtime, releaseDate)
+            Movie movie = new Movie(id, title, poster, backdrop, synopsis, rating, runtime, releaseDate);
 
             favoriteMovies.add(movie);
         }

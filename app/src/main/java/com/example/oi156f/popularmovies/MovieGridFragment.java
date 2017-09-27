@@ -1,27 +1,23 @@
 package com.example.oi156f.popularmovies;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.oi156f.popularmovies.utilities.MovieUtils;
-
-import java.net.URL;
-import java.util.Arrays;
 
 public class MovieGridFragment extends Fragment {
 
     private View rootView;
     private GridView moviesGrid;
     private TextView genericError;
+    private TextView noFavError;
+    private int currentSorting;
 
     public MovieGridFragment() {
         // Required empty public constructor
@@ -40,8 +36,16 @@ public class MovieGridFragment extends Fragment {
 
         moviesGrid = (GridView) rootView.findViewById(R.id.movies_grid);
         genericError = (TextView) rootView.findViewById(R.id.error_generic);
+        noFavError = (TextView) rootView.findViewById(R.id.error_no_favorites);
         loadMoviePosters(MovieUtils.SORT_POPULAR);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (currentSorting == MovieUtils.SORT_FAVORITES)
+            loadMoviePosters(MovieUtils.SORT_FAVORITES);
     }
 
     @Override
@@ -65,12 +69,14 @@ public class MovieGridFragment extends Fragment {
     }
 
     private void loadMoviePosters(int sorting) {
+        currentSorting = sorting;
         showMoviePostersView();
         new FetchMoviesTask(getActivity(), rootView).execute(sorting);
     }
 
     private void showMoviePostersView() {
         genericError.setVisibility(View.INVISIBLE);
+        noFavError.setVisibility(View.INVISIBLE);
         moviesGrid.setVisibility(View.VISIBLE);
     }
 }

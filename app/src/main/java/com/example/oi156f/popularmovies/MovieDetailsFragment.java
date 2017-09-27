@@ -2,18 +2,17 @@ package com.example.oi156f.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.example.oi156f.popularmovies.data.FavoritesContract.*;
 
@@ -30,7 +29,7 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
     @BindView(R.id.movie_date) TextView date;
     @BindView(R.id.movie_rating) TextView rating;
     @BindView(R.id.movie_synopsis) TextView synopsis;
-    @BindView(R.id.favorite_button) ToggleButton favoriteButton;
+    @BindView(R.id.favorite_button) ImageButton favoriteButton;
 
     private Movie movie = null;
 
@@ -55,13 +54,14 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
         }
         if(intent.hasExtra(getString(R.string.intent_tag))) {
             movie = intent.getParcelableExtra(getString(R.string.intent_tag));
+            isFavorite = checkIfFavorite(movie);
             new FetchDetailsTask(getActivity(), rootView).execute(movie);
             title.setText(movie.getTitle());
             Picasso.with(getActivity()).load(movie.getPoster()).into(image);
             date.setText(movie.getReleaseDate().substring(0, 4));
             rating.setText(getString(R.string.movie_rating, movie.getRating()));
             synopsis.setText(movie.getOverview());
-            favoriteButton.setChecked(isFavorite);
+            setFavIcon(isFavorite);
         }
         return rootView;
     }
@@ -72,7 +72,7 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
         outState.putBoolean(MovieUtils.FAVORITES_KEY, isFavorite);
     }
 
-    public void addFavorite() {
+    private void addFavorite() {
 
         if (movie == null) return;
 
@@ -89,19 +89,38 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
         Uri uri = getContext().getContentResolver().insert(FavoritesEntry.CONTENT_URI, contentValues);
 
         if(uri != null) {
-            Toast.makeText(getActivity().getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+            String message = "\'" + movie.getTitle() + "\' added to Favorites";
+            Toast.makeText(getActivity().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+            setFavIcon(true);
         }
     }
 
-    public void deleteFavorite() {
+    private void deleteFavorite() {
         Uri uri = FavoritesEntry.CONTENT_URI;
-        String mSelection = FavoritesEntry.COLUMN_MOVIE_ID + "=?";
-        String[] mSelectionArgs = new String[]{Integer.toString(movie.getId())};
-        int numDeleted = getContext().getContentResolver().delete(uri, mSelection, mSelectionArgs);
+        uri = uri.buildUpon().appendPath(""+movie.getId()).build();
+        int numDeleted = getContext().getContentResolver().delete(uri, null, null);
 
-        String message = "deleted " + numDeleted + " " + movie.getTitle();
+        if (numDeleted != 0) {
+            String message = "\'" + movie.getTitle() + "\' removed from Favorites";
+            Toast.makeText(getActivity().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+            setFavIcon(false);
+        }
+    }
 
-        Toast.makeText(getActivity().getBaseContext(), message, Toast.LENGTH_LONG).show();
+    private boolean checkIfFavorite(Movie movie) {
+        Uri uri = FavoritesEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(""+movie.getId()).build();
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+        boolean fav = (cursor.getCount() > 0);
+        cursor.close();
+        return fav;
+    }
+
+    private void setFavIcon(boolean isFavorite) {
+        if (isFavorite)
+            favoriteButton.setImageResource(android.R.drawable.btn_star_big_on);
+        else
+            favoriteButton.setImageResource(android.R.drawable.btn_star_big_off);
     }
 
     @Override
@@ -112,13 +131,15 @@ public class MovieDetailsFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (favoriteButton.isChecked()) {
-            addFavorite();
-            isFavorite = true;
-        }
-        else if (!(favoriteButton.isChecked())) {
-            deleteFavorite();
-            isFavorite = false;
+        switch (v.getId()) {
+            case R.id.favorite_button:
+                if (!isFavorite) {
+                    addFavorite();
+                    isFavorite = true;
+                } else {
+                    deleteFavorite();
+                    isFavorite = false;
+                }
         }
     }
 }

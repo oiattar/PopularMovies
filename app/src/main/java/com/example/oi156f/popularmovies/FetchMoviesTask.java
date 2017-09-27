@@ -1,6 +1,7 @@
 package com.example.oi156f.popularmovies;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.GridView;
@@ -8,30 +9,31 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.oi156f.popularmovies.adapters.MovieAdapter;
+import com.example.oi156f.popularmovies.data.FavoritesContract;
 import com.example.oi156f.popularmovies.utilities.MovieUtils;
 
 import java.net.URL;
 import java.util.Arrays;
 
 /**
- * Created by oi156f on 8/28/2017.
+ * Created by Omar on 8/28/2017.
  * AsyncTask to fetch movies for main movie grid
  */
 
 class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
 
-    private Activity mActivity;
-    private View rootView;
-    private GridView moviesGrid;
-    private ProgressBar loadingIcon;
-    private TextView genericError;
+    private final Activity mActivity;
+    private final GridView moviesGrid;
+    private final ProgressBar loadingIcon;
+    private final TextView genericError;
+    private final TextView noFavError;
 
     FetchMoviesTask(Activity activity, View view) {
         mActivity = activity;
-        rootView = view;
-        moviesGrid = (GridView) rootView.findViewById(R.id.movies_grid);
-        loadingIcon = (ProgressBar) rootView.findViewById(R.id.loading_icon);
-        genericError = (TextView) rootView.findViewById(R.id.error_generic);
+        moviesGrid = (GridView) view.findViewById(R.id.movies_grid);
+        loadingIcon = (ProgressBar) view.findViewById(R.id.loading_icon);
+        genericError = (TextView) view.findViewById(R.id.error_generic);
+        noFavError = (TextView) view.findViewById(R.id.error_no_favorites);
     }
 
     @Override
@@ -43,9 +45,17 @@ class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
     @Override
     protected Movie[] doInBackground(Integer... params) {
         int sorting = params[0];
+        if (sorting == MovieUtils.SORT_FAVORITES) {
+            try {
+                Cursor cursor = mActivity.getContentResolver().query(FavoritesContract.FavoritesEntry.CONTENT_URI, null, null, null, null);
+                return MovieUtils.getFavoriteMoviesFromCursor(cursor);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
         URL movieUrl = MovieUtils.buildUrl(sorting);
-        //TODO: if favorite, query to get cursor
-        //TODO: convert cursor to Movie[], use MovieUtil
 
         try {
             String moviesJson = MovieUtils.getResponseFromHttpUrl(movieUrl);
@@ -59,16 +69,25 @@ class FetchMoviesTask extends AsyncTask<Integer, Void, Movie[]> {
     @Override
     protected void onPostExecute(Movie[] movies) {
         loadingIcon.setVisibility(View.INVISIBLE);
-        if(movies != null) {
+        if (movies == null)
+            showErrorMessage();
+        else if (movies.length == 0)
+            showNoFavMessage();
+        else {
             MovieAdapter adapter = new MovieAdapter(mActivity, Arrays.asList(movies));
             moviesGrid.setAdapter(adapter);
-        } else {
-            showErrorMessage();
         }
     }
 
     private void showErrorMessage() {
         moviesGrid.setVisibility(View.INVISIBLE);
+        noFavError.setVisibility(View.INVISIBLE);
         genericError.setVisibility(View.VISIBLE);
+    }
+
+    private void showNoFavMessage() {
+        moviesGrid.setVisibility(View.INVISIBLE);
+        genericError.setVisibility(View.INVISIBLE);
+        noFavError.setVisibility(View.VISIBLE);
     }
 }

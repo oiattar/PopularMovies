@@ -1,10 +1,12 @@
 package com.example.oi156f.popularmovies.utilities;
 
+import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.oi156f.popularmovies.Movie;
 import com.example.oi156f.popularmovies.Movie.*;
+import com.example.oi156f.popularmovies.data.FavoritesContract.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,11 +17,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public final class MovieUtils {
-
-    private static final String TAG = MovieUtils.class.getSimpleName();
 
     private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
     private static final String POPULAR_MOVIES = "popular";
@@ -209,9 +210,9 @@ public final class MovieUtils {
 
         Trailer[] trailers = new Trailer[trailerCount];
         int pos = 0;
-        for (int i = 0; i < temp.length; i++) {
-            if(temp[i] != null) {
-                trailers[pos] = temp[i];
+        for (Trailer aTemp : temp) {
+            if (aTemp != null) {
+                trailers[pos] = aTemp;
                 pos++;
             }
         }
@@ -258,6 +259,27 @@ public final class MovieUtils {
         }
 
         return reviews;
+    }
+
+    public static Movie[] getFavoriteMoviesFromCursor(Cursor cursor) {
+        ArrayList<Movie> favoriteMovies = new ArrayList<>();
+
+        while(cursor.moveToNext()) {
+            String title = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_TITLE));
+            int id = cursor.getInt(cursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_ID));
+            String poster = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_POSTER_PATH));
+            String synopsis = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_SYNOPSIS));
+            double rating = cursor.getDouble(cursor.getColumnIndex(FavoritesEntry.COLUMN_RATING));
+            int runtime = cursor.getInt(cursor.getColumnIndex(FavoritesEntry.COLUMN_RUNTIME));
+            String releaseDate = cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_RELEASE_DATE));
+
+            Movie movie = new Movie(id, title, poster, synopsis, rating, runtime, releaseDate);
+            Log.v("OMAR: ", "movie: " + title);
+
+            favoriteMovies.add(movie);
+        }
+
+        return favoriteMovies.toArray(new Movie[favoriteMovies.size()]);
     }
 
     public static int getRuntimeFromJson(String detailsJsonStr)

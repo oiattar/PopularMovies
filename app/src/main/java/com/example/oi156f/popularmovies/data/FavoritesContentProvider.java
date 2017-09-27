@@ -15,8 +15,8 @@ import static com.example.oi156f.popularmovies.data.FavoritesContract.FavoritesE
 
 public class FavoritesContentProvider extends ContentProvider {
 
-    public static final int FAVORITES = 100;
-    public static final int FAVORITES_WITH_ID = 101;
+    private static final int FAVORITES = 100;
+    private static final int FAVORITES_WITH_ID = 101;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -77,7 +77,7 @@ public class FavoritesContentProvider extends ContentProvider {
             case FAVORITES_WITH_ID:
                 String id = uri.getPathSegments().get(1);
 
-                String mSelection = "_id=?";
+                String mSelection = FavoritesEntry.COLUMN_MOVIE_ID + "=?";
                 String[] mSelectionArgs = new String[]{id};
 
                 retCursor =  db.query(TABLE_NAME,
@@ -99,6 +99,32 @@ public class FavoritesContentProvider extends ContentProvider {
     }
 
     @Override
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+        final SQLiteDatabase db = mFavoritesDbHelper.getWritableDatabase();
+
+        int match = sUriMatcher.match(uri);
+        int favoritesDeleted;
+
+        switch (match) {
+            case FAVORITES:
+                favoritesDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
+                break;
+            case FAVORITES_WITH_ID:
+                String id = uri.getPathSegments().get(1);
+                favoritesDeleted = db.delete(TABLE_NAME, FavoritesEntry.COLUMN_MOVIE_ID + "=?", new String[]{id});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (favoritesDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return favoritesDeleted;
+    }
+
+    @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         final SQLiteDatabase db = mFavoritesDbHelper.getWritableDatabase();
@@ -112,7 +138,7 @@ public class FavoritesContentProvider extends ContentProvider {
                 break;
             case FAVORITES_WITH_ID:
                 String id = uri.getPathSegments().get(1);
-                favoritesUpdated = db.update(TABLE_NAME, values, "_id=?", new String[]{id});
+                favoritesUpdated = db.update(TABLE_NAME, values, FavoritesEntry.COLUMN_MOVIE_ID + "=?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -123,33 +149,6 @@ public class FavoritesContentProvider extends ContentProvider {
         }
 
         return favoritesUpdated;
-    }
-
-
-    @Override
-    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        final SQLiteDatabase db = mFavoritesDbHelper.getWritableDatabase();
-
-        int match = sUriMatcher.match(uri);
-        int favoritesDeleted;
-
-        switch (match) {
-            case FAVORITES:
-                favoritesDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
-                break;
-            case FAVORITES_WITH_ID:
-                String id = uri.getPathSegments().get(1);
-                favoritesDeleted = db.delete(TABLE_NAME, "_id=?", new String[]{id});
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
-
-        if (favoritesDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        }
-
-        return favoritesDeleted;
     }
 
     @Override
@@ -168,7 +167,7 @@ public class FavoritesContentProvider extends ContentProvider {
         }
     }
 
-    public static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 

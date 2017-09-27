@@ -24,10 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_sort) {
-            return true;
-        }
+        return id == R.id.action_sort || super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
     }
 }

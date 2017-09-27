@@ -2,19 +2,25 @@
     <string name="app_name">Popular Movies</string>
 
     <string name="error_message">Something went wrong. Please try again.</string>
+    <string name="error_no_fav_message">You don\'t have any favorites.</string>
+    <string name="error_no_trailers_message">No trailers for this movie</string>
+    <string name="error_no_reviews_message">No reviews for this movie</string>
+
     <string name="intent_tag">SelectedMovie</string>
+
     <string name="movie_poster_desc">Movie Poster</string>
     <string name="movie_rating">%.1f/10</string>
     <string name="movie_runtime">%1$d min</string>
+
     <string name="menu_sort">Sort By</string>
     <string name="menu_sort_popular">Popular</string>
     <string name="menu_sort_top_rated">Top Rated</string>
     <string name="menu_sort_favorites">Favorites</string>
+
     <string name="trailers_label">Trailers:</string>
     <string name="reviews_label">Reviews:</string>
-    <string name="favorite_button_unselected">Mark As Favorite</string>
-    <string name="favorite_button_selected">Favorited</string>
 
     <string name="trailer_image_desc">Trailer Video</string>
+    <string name="fav_image_desc">Favorite Button</string>
 
 </resources>

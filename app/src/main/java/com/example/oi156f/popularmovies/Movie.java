@@ -15,6 +15,16 @@ public class Movie implements Parcelable {
     private Trailer[] trailers;
     private Review[] reviews;
 
+    public Movie(int id, String title, String poster, String overview, double rating, int runtime, String releaseDate) {
+        this.id = id;
+        this.title = title;
+        this.poster = poster;
+        this.overview = overview;
+        this.rating = rating;
+        this.runtime = runtime;
+        this.releaseDate = releaseDate;
+    }
+
     public Movie() {}
 
     private Movie(Parcel source) {

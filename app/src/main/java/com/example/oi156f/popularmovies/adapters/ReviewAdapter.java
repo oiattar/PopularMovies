@@ -11,7 +11,7 @@ import com.example.oi156f.popularmovies.Movie.*;
 import com.example.oi156f.popularmovies.R;
 
 /**
- * Created by oiatt on 9/24/2017.
+ * Created by Omar on 9/24/2017.
  * Adapter to populate reviews RecyclerView
  */
 
@@ -19,7 +19,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     private final Context mContext;
 
-    private Review[] mReviews;
+    private final Review[] mReviews;
 
     public ReviewAdapter(Context context, Review[] reviews) {
         mContext = context;
@@ -49,9 +49,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-        TextView author;
-        public TextView content;
-        View divider;
+        final TextView author;
+        public final TextView content;
+        final View divider;
 
         ReviewViewHolder(View view) {
             super(view);

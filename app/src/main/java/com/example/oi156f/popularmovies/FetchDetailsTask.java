@@ -20,26 +20,26 @@ import com.example.oi156f.popularmovies.Movie.*;
 import java.net.URL;
 
 /**
- * Created by oiatt on 9/24/2017.
+ * Created by Omar on 9/24/2017.
  * AsyncTask to fetch details of selected movie like trailers and reviews
  */
 
 class FetchDetailsTask extends AsyncTask<Movie, Movie, Movie> {
 
-    private Activity mActivity;
-    private View rootView;
+    private final Activity mActivity;
     @BindView(R.id.trailers_list) RecyclerView trailersList;
     @BindView(R.id.reviews_list) RecyclerView reviewsList;
     @BindView(R.id.movie_runtime) TextView runtime;
     @BindView(R.id.trailers_loading_icon) ProgressBar trailersLoading;
     @BindView(R.id.reviews_loading_icon) ProgressBar reviewsLoading;
+    @BindView(R.id.error_no_trailers) TextView noTrailersError;
+    @BindView(R.id.error_no_reviews) TextView noReviewsError;
 
-    private Unbinder unbinder;
+    private final Unbinder unbinder;
 
     FetchDetailsTask(Activity activity, View view) {
         mActivity = activity;
-        rootView = view;
-        unbinder = ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, view);
     }
 
     @Override
@@ -82,14 +82,20 @@ class FetchDetailsTask extends AsyncTask<Movie, Movie, Movie> {
     protected void onPostExecute(Movie movie) {
         trailersLoading.setVisibility(View.GONE);
         reviewsLoading.setVisibility(View.GONE);
-        if(movie != null) {
-            TrailerAdapter trailerAdapter = new TrailerAdapter(mActivity, movie.getTrailers());
-            trailersList.setAdapter(trailerAdapter);
-            trailersList.setLayoutManager(new LinearLayoutManager(mActivity));
-            ReviewAdapter reviewAdapter = new ReviewAdapter(mActivity, movie.getReviews());
-            reviewsList.setAdapter(reviewAdapter);
-            reviewsList.setLayoutManager(new LinearLayoutManager(mActivity));
+        if (movie.getTrailers() == null || movie.getTrailers().length == 0) {
+            trailersList.setVisibility(View.INVISIBLE);
+            noTrailersError.setVisibility(View.VISIBLE);
         }
+        if (movie.getReviews() == null || movie.getReviews().length == 0) {
+            reviewsList.setVisibility(View.INVISIBLE);
+            noReviewsError.setVisibility(View.VISIBLE);
+        }
+        TrailerAdapter trailerAdapter = new TrailerAdapter(mActivity, movie.getTrailers());
+        trailersList.setAdapter(trailerAdapter);
+        trailersList.setLayoutManager(new LinearLayoutManager(mActivity));
+        ReviewAdapter reviewAdapter = new ReviewAdapter(mActivity, movie.getReviews());
+        reviewsList.setAdapter(reviewAdapter);
+        reviewsList.setLayoutManager(new LinearLayoutManager(mActivity));
         unbinder.unbind();
     }
 }

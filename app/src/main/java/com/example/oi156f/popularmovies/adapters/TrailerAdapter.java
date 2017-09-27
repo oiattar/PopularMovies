@@ -14,7 +14,7 @@ import com.example.oi156f.popularmovies.Movie.*;
 import com.example.oi156f.popularmovies.R;
 
 /**
- * Created by oiatt on 9/24/2017.
+ * Created by Omar on 9/24/2017.
  * Adapter to populate trailers RecyclerView
  */
 
@@ -22,7 +22,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     private final Context mContext;
 
-    private Trailer[] mTrailers;
+    private final Trailer[] mTrailers;
 
     public TrailerAdapter(Context context, Trailer[] trailers) {
         mContext = context;
@@ -56,8 +56,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView name;
-        View divider;
+        public final TextView name;
+        final View divider;
 
         TrailerViewHolder(View view) {
             super(view);
